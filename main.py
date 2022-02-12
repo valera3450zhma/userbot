@@ -28,9 +28,13 @@ def rusak_battle(_, message):
     times = int(message.text[6:])
     print(times)
     for i in range(times):
-        bot_results = app.get_inline_bot_results("Random_UAbot")
-        app.send_inline_bot_result(f"{message.chat.id}", bot_results.query_id, bot_results.results[0].id)
-        sleep(0.1)
+        try:
+            bot_results = app.get_inline_bot_results("Random_UAbot")
+            app.send_inline_bot_result(message.chat.id, bot_results.query_id, bot_results.results[0].id)
+            sleep(0.5)
+        except FloodWait as e:
+            sleep(e.x)
+    app.send_message(message.chat.id, "їбанутиси2")
 
 
 app.run()
