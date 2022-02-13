@@ -26,15 +26,16 @@ def type_style(_, message):
 @app.on_message(filters.command("rusak", "!") & filters.me)
 def rusak_battle(_, message):
     times = int(message.text[6:])
-    print(times)
+    chat_id = message.chat.id
+    app.delete_messages(chat_id, message.message_id)
     for i in range(times):
         try:
             bot_results = app.get_inline_bot_results("Random_UAbot")
-            app.send_inline_bot_result(message.chat.id, bot_results.query_id, bot_results.results[0].id)
+            app.send_inline_bot_result(chat_id, bot_results.query_id, bot_results.results[0].id)
             sleep(0.5)
         except FloodWait as e:
             sleep(e.x)
-    app.send_message(message.chat.id, "їбанутиси2")
+
 
 
 app.run()
