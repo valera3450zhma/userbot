@@ -28,6 +28,9 @@ def rusak_battle(_, message):
     times = int(message.text[6:])
     chat_id = message.chat.id
     app.delete_messages(chat_id, message.message_id)
+    if times > 100:
+        app.send_message(chat_id, "Задохуя, ставлю сотку")
+        times = 100
     for i in range(times):
         try:
             if i % 10 == 0:
@@ -37,6 +40,7 @@ def rusak_battle(_, message):
             sleep(2)
         except FloodWait as e:
             sleep(e.x)
+    sleep(10)
 
 
 @app.on_message(filters.command("heal", "!"))
