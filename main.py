@@ -30,9 +30,8 @@ def rusak_battle(_, message):
     app.delete_messages(chat_id, message.message_id)
     for i in range(times):
         try:
-            if i % 30 == 0:
+            if i % 30 == 1:
                 sent = app.send_message("Random_UAbot", "/shop")
-
                 bot_message = app.get_messages("Random_UAbot", sent.message_id+1)
                 bot_message.click(3)
 
