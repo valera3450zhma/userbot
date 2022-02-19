@@ -30,12 +30,17 @@ def rusak_battle(_, message):
     app.delete_messages(chat_id, message.message_id)
     for i in range(times):
         try:
+            if i % 30 == 0:
+                sent = app.send_message("Random_UAbot", "/shop")
+
+                bot_message = app.get_messages("Random_UAbot", sent.message_id+1)
+                bot_message.click(3)
+
             bot_results = app.get_inline_bot_results("Random_UAbot")
             app.send_inline_bot_result(chat_id, bot_results.query_id, bot_results.results[0].id)
-            sleep(0.5)
+            sleep(2)
         except FloodWait as e:
             sleep(e.x)
-
 
 
 app.run()
