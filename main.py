@@ -33,7 +33,7 @@ def rusak_battle(_, message):
         times = 30
     for i in range(times):
         try:
-            if i % 10 == 0:
+            if i == 0:
                 buy_heal(_, message)
             bot_results = app.get_inline_bot_results("Random_UAbot")
             app.send_inline_bot_result(chat_id, bot_results.query_id, bot_results.results[0].id)
