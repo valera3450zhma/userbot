@@ -43,6 +43,23 @@ def rusak_battle(_, message):
     sleep(60)
 
 
+@app.on_message(filters.command("soled", "!") & filters.me)
+def rusak_battle(_, message):
+    times = int(message.text[6:])
+    chat_id = message.chat.id
+    app.delete_messages(chat_id, message.message_id)
+    if times > 20:
+        times = 20
+    for i in range(times):
+        try:
+            bot_results = app.get_inline_bot_results("Random_UAbot")
+            app.send_inline_bot_result(chat_id, bot_results.query_id, bot_results.results[0].id)
+            sleep(2)
+        except FloodWait as e:
+            sleep(e.x)
+    sleep(60)
+
+
 @app.on_message(filters.command("heal", "!"))
 def buy_heal(_, message):
     chat_id = message.chat.id
