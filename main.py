@@ -40,7 +40,30 @@ def rusak_battle(_, message):
             sleep(0.5)
         except FloodWait as e:
             sleep(e.x)
-    sleep(60)
+    sleep(180)
+
+
+@app.on_message(filters.command("huyak", "!") & filters.me)
+def rusak_battle(_, message):
+    times = int(message.text[6:])
+    chat_id = -786803186
+    app.delete_messages(chat_id, message.message_id)
+    if times > 30:
+        app.send_message(chat_id, "Задохуя, ставлю 30")
+        times = 30
+    elif times < 1:
+        app.send_message(chat_id, "Дурачок? Ну вот нашо таке робити...")
+        times = 1
+    for i in range(times):
+        try:
+            if i == 0:
+                buy_heal(_, message)
+            bot_results = app.get_inline_bot_results("Random_UAbot")
+            app.send_inline_bot_result(chat_id, bot_results.query_id, bot_results.results[0].id)
+            sleep(0.5)
+        except FloodWait as e:
+            sleep(e.x)
+    sleep(180)
 
 
 @app.on_message(filters.command("soled", "!") & filters.me)
@@ -57,7 +80,7 @@ def rusak_battle(_, message):
             sleep(1)
         except FloodWait as e:
             sleep(e.x)
-    sleep(60)
+    sleep(180)
 
 
 @app.on_message(filters.command("heal", "!"))
