@@ -53,7 +53,7 @@ def rusak_battle(_, message):
     for i in range(times):
         try:
             bot_results = app.get_inline_bot_results("Random_UAbot")
-            app.send_inline_bot_result(chat_id, bot_results.query_id, bot_results.results[0].id)
+            app.send_inline_bot_result("soledar1", bot_results.query_id, bot_results.results[0].id)
             sleep(2)
         except FloodWait as e:
             sleep(e.x)
