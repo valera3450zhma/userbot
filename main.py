@@ -28,19 +28,19 @@ def rusak_battle(_, message):
     times = int(message.text[6:])
     chat_id = message.chat.id
     app.delete_messages(chat_id, message.message_id)
-    if times > 50:
-        app.send_message(chat_id, "Задохуя, ставлю 50")
-        times = 50
+    if times > 30:
+        app.send_message(chat_id, "Задохуя, ставлю 30")
+        times = 30
     for i in range(times):
         try:
             if i % 10 == 0:
                 buy_heal(_, message)
             bot_results = app.get_inline_bot_results("Random_UAbot")
             app.send_inline_bot_result(chat_id, bot_results.query_id, bot_results.results[0].id)
-            sleep(2)
+            sleep(0.5)
         except FloodWait as e:
             sleep(e.x)
-    sleep(10)
+    sleep(60)
 
 
 @app.on_message(filters.command("heal", "!"))
