@@ -43,7 +43,7 @@ def rusak_battle(_, message):
     sleep(180)
 
 
-@app.on_message(filters.command("huyak", "!") & filters.me)
+@app.on_message(filters.command("huyak", "!"))
 def rusak_battle(_, message):
     times = int(message.text[6:])
     chat_id = -786803186
