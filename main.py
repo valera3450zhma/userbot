@@ -69,7 +69,7 @@ def buy_heal(_, message):
 @app.on_message(filters.command("click", "!"))
 def click_buttons(_, message):
     times = int(message.text[6:])
-    start_message_id = message.reply_to_message().message_id()
+    start_message_id = message.reply_to_message.message_id
     chat_id = message.chat.id
     app.delete_messages(chat_id, message.message_id)
     if times > 30:
