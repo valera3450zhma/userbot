@@ -31,16 +31,7 @@ def rusak_battle(_, message):
     if times > 30:
         app.send_message(chat_id, "Задохуя, ставлю 30")
         times = 30
-    for i in range(times):
-        try:
-            if i == 0:
-                buy_heal(_, message)
-            bot_results = app.get_inline_bot_results("Random_UAbot")
-            app.send_inline_bot_result(chat_id, bot_results.query_id, bot_results.results[0].id)
-            sleep(0.5)
-        except FloodWait as e:
-            sleep(e.x)
-    sleep(180)
+    fight(_, message, times, chat_id)
 
 
 @app.on_message(filters.command("huyak", "!"))
@@ -54,33 +45,7 @@ def rusak_battle(_, message):
     elif times < 1:
         app.send_message(chat_id, "Дурачок? Ну вот нашо таке робити...")
         times = 1
-    for i in range(times):
-        try:
-            if i == 0:
-                buy_heal(_, message)
-            bot_results = app.get_inline_bot_results("Random_UAbot")
-            app.send_inline_bot_result(chat_id, bot_results.query_id, bot_results.results[0].id)
-            sleep(0.5)
-        except FloodWait as e:
-            sleep(e.x)
-    sleep(180)
-
-
-@app.on_message(filters.command("soled", "!") & filters.me)
-def rusak_battle(_, message):
-    times = int(message.text[6:])
-    chat_id = message.chat.id
-    app.delete_messages(chat_id, message.message_id)
-    if times > 20:
-        times = 20
-    for i in range(times):
-        try:
-            bot_results = app.get_inline_bot_results("Random_UAbot")
-            app.send_inline_bot_result("soledar1", bot_results.query_id, bot_results.results[0].id)
-            sleep(1)
-        except FloodWait as e:
-            sleep(e.x)
-    sleep(180)
+    fight(_, message, times, chat_id)
 
 
 @app.on_message(filters.command("heal", "!"))
@@ -99,6 +64,36 @@ def buy_heal(_, message):
         app.send_message(chat_id, "купив аптечку")
     else:
         app.send_message(chat_id, "норм, жити можна")
+
+
+@app.on_message(filters.command("click", "!"))
+def click_buttons(_, message):
+    times = int(message.text[6:])
+    start_message_id = message.reply_to_message().message_id()
+    chat_id = message.chat.id
+    app.delete_messages(chat_id, message.message_id)
+    if times > 30:
+        app.send_message(chat_id, "задофіга, ставлю 30")
+        times = 30
+    elif times < 1:
+        app.send_message(chat_id, "дурачок? буде 1")
+        times = 1
+    for i in range(start_message_id, start_message_id + times):
+        message_to_click = app.get_messages(chat_id, i)
+        message_to_click.click(0)
+        sleep(0.5)
+
+
+def fight(_, message, times, chat_id):
+    for i in range(times):
+        try:
+            if i == 0:
+                buy_heal(_, message)
+            bot_results = app.get_inline_bot_results("Random_UAbot")
+            app.send_inline_bot_result(chat_id, bot_results.query_id, bot_results.results[0].id)
+            sleep(0.5)
+        except FloodWait as e:
+            sleep(e.x)
 
 
 app.run()
