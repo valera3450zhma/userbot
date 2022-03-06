@@ -5,7 +5,7 @@ from pyrogram.errors import FloodWait
 
 from time import sleep
 
-app = Client("my_account", api_id=876100, api_hash="ab03c3758ababdad2d8859e08244ae40")
+app = Client("my_account", api_id=876100, api_hash="ab03c3758ababdad2d8859e08244ae40")  # сюда встав коди
 
 
 @app.on_message(filters.command("print", "!") & filters.me)
@@ -68,7 +68,7 @@ def buy_heal(_, message):
         app.send_message(chat_id, "норм, жити можна")
 
 
-@app.on_message(filters.command("click", "!"))
+@app.on_message(filters.command("click", "!") & filters.me)
 def click_buttons(_, message):
     times = int(message.text[6:])
     start_message_id = message.reply_to_message.message_id
