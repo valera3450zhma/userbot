@@ -97,7 +97,7 @@ def fight(_, message, times, chat_id):
         try:
             bot_results = app.get_inline_bot_results("Random_UAbot")
             app.send_inline_bot_result(chat_id, bot_results.query_id, bot_results.results[0].id)
-            asyncio.sleep(0.5)
+            sleep(0.5)
         except FloodWait as e:
             sleep(e.x)
 
