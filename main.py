@@ -1,3 +1,5 @@
+import asyncio
+
 from pyrogram import Client, filters
 from pyrogram.errors import FloodWait
 
@@ -78,20 +80,24 @@ def click_buttons(_, message):
     elif times < 1:
         app.send_message(chat_id, "дурачок? буде 1")
         times = 1
+    buy_heal(_, message)
     for i in range(start_message_id, start_message_id + times):
         message_to_click = app.get_messages(chat_id, i)
-        message_to_click.click(0)
-        sleep(0.5)
+        try:
+            message_to_click.click(0, timeout=1)
+        except TimeoutError as e:   # skip timeout
+            pass
+        except ValueError as e:     # skip non-battle messages
+            pass
 
 
 def fight(_, message, times, chat_id):
+    buy_heal(_, message)
     for i in range(times):
         try:
-            if i == 0:
-                buy_heal(_, message)
             bot_results = app.get_inline_bot_results("Random_UAbot")
             app.send_inline_bot_result(chat_id, bot_results.query_id, bot_results.results[0].id)
-            sleep(0.5)
+            asyncio.sleep(0.5)
         except FloodWait as e:
             sleep(e.x)
 
