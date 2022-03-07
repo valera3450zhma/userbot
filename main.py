@@ -38,9 +38,13 @@ def rusak_battle(_, message):
 
 @app.on_message(filters.command("huyak", "!"))
 def rusak_battle(_, message):
-    times = int(message.text[6:])
+    splited = message.text.split(" ")
+    times = int(splited[2])
+    target = splited[1]
     chat_id = -786803186
     app.delete_messages(chat_id, message.message_id)
+    if target != "deadnfixed" and target != "@deadnfixed":  # сюда свій нік
+        return
     if times > 30:
         app.send_message(chat_id, "Задохуя, ставлю 30")
         times = 30
