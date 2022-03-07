@@ -104,6 +104,7 @@ def fight(_, message, times, chat_id):
             sleep(0.5)
         except FloodWait as e:
             sleep(e.x)
+    app.send_message(chat_id, "кінчив")
 
 
 app.run()
