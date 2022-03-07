@@ -78,9 +78,9 @@ def click_buttons(_, message):
     start_message_id = message.reply_to_message.message_id
     chat_id = message.chat.id
     app.delete_messages(chat_id, message.message_id)
-    if times > 30:
+    if times > 40:
         app.send_message(chat_id, "задофіга, ставлю 30")
-        times = 30
+        times = 40
     elif times < 1:
         app.send_message(chat_id, "дурачок? буде 1")
         times = 1
