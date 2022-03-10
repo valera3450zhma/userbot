@@ -85,7 +85,7 @@ def click_buttons(_, message):
         app.send_message(chat_id, "дурачок? буде 1")
         times = 1
     buy_heal(_, message)
-    for i in range(start_message_id, start_message_id + times):
+    for i in range(start_message_id - times, start_message_id):
         message_to_click = app.get_messages(chat_id, i)
         try:
             message_to_click.click(0, timeout=1)
