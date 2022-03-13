@@ -95,13 +95,49 @@ def click_buttons(_, message):
             pass
 
 
+@app.on_message(filters.command("ebash", "!"))
+def ebashilovo(_, message):
+    times = 12340   # приблизно 1 доба
+    chat_id = message.chat.id
+    if message.from_id == 506126580:    # сюда свою id-шку, подивитись можна в бота @creationdatebot
+        for i in range(times):
+            try:
+                if i % 30 == 0:
+                    buy_heal(_, message)
+                bot_results = app.get_inline_bot_results("Random_UAbot")
+                app.send_inline_bot_result(chat_id, bot_results.query_id, bot_results.results[0].id)
+                sleep(1)
+                if i % 30 == 29:
+                    sleep(180)
+            except FloodWait as e:
+                sleep(e.x)
+        app.send_message(chat_id, "кінчив")
+    else:
+        for i in range(message.message_id, message.message_id + times + 1):
+            try:
+                if i % 30 == 0:
+                    buy_heal(_, message)
+                elif i % 30 == 29:
+                    sleep(180)
+                message_to_click = app.get_messages(chat_id, i)
+                message_to_click.click(0, timeout=1)
+            except FloodWait as e:
+                sleep(e.x)
+            except TimeoutError as e:  # skip timeout
+                pass
+            except ValueError as e:  # skip non-battle messages
+                pass
+        app.send_message(chat_id, "кінчив")
+
+
 def fight(_, message, times, chat_id):
-    buy_heal(_, message)
     for i in range(times):
         try:
+            if i % 30 == 0:
+                buy_heal(_, message)
             bot_results = app.get_inline_bot_results("Random_UAbot")
             app.send_inline_bot_result(chat_id, bot_results.query_id, bot_results.results[0].id)
-            sleep(0.5)
+            sleep(1)
         except FloodWait as e:
             sleep(e.x)
     app.send_message(chat_id, "кінчив")
