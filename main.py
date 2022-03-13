@@ -97,7 +97,7 @@ def click_buttons(_, message):
 
 @app.on_message(filters.command("ebash", "!"))
 def ebashilovo(_, message):
-    times = 12340   # приблизно 1 доба
+    times = 5000   # приблизно 1 доба
     chat_id = message.chat.id
     if message.from_user.id == 506126580:    # сюда свою id-шку, подивитись можна в бота @creationdatebot
         for i in range(times):
@@ -120,6 +120,7 @@ def ebashilovo(_, message):
                     buy_heal(_, message)
                 message_to_click = app.get_messages(chat_id, message.message_id + i)
                 message_to_click.click(0, timeout=1)
+                sleep(1)
                 if i % 30 == 29:
                     sleep(180)
             except FloodWait as e:
