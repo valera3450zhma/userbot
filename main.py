@@ -120,7 +120,7 @@ def ebashilovo(_, message):
                     buy_heal(_, message)
                 message_to_click = app.get_messages(chat_id, message.message_id + i)
                 message_to_click.click(0, timeout=1)
-                sleep(2)
+                sleep(3)
                 if i % 30 == 29:
                     sleep(180)
             except FloodWait as e:
