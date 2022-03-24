@@ -87,6 +87,8 @@ def ebash(_, message):
     fight(_, message, times, chat_id)
     text = f"!cluck {message.from_user.username}"
     sent = app.send_message(chat_id, "получаю ід повідомлення")
+    print(sent.message_id)
+    print(sent.message_id-2)
     app.send_message(chat_id, text, reply_to_message_id=app.get_messages(chat_id, sent.message_id - 2).message_id)
 
 
