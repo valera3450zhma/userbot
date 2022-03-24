@@ -6,23 +6,7 @@ from pyrogram.errors import FloodWait
 from time import sleep
 
 app = Client("my_account", api_id=876100, api_hash="ab03c3758ababdad2d8859e08244ae40")  # сюда встав коди
-
-
-@app.on_message(filters.command("print", "!") & filters.me)
-def type_style(_, message):
-    text = message.text.split("!print ", maxsplit=1)[1]
-    to_print = ""
-    typing_symbol = '▒'
-    while len(text) != 0:
-        try:
-            message.edit(to_print + typing_symbol)
-            sleep(0.002)
-            to_print += text[0]
-            text = text[1:]
-            message.edit(to_print)
-            sleep(0.001)
-        except FloodWait as e:
-            sleep(e.x)
+nickname = "deadnfixed"
 
 
 @app.on_message(filters.command("rusak", "!") & filters.me)
@@ -43,7 +27,7 @@ def rusak_battle(_, message):
     target = splited[1]
     chat_id = -786803186
     app.delete_messages(chat_id, message.message_id)
-    if target != "deadnfixed":
+    if target != nickname:
         return
     if times > 30:
         app.send_message(chat_id, "Задохуя, ставлю 30")
@@ -84,20 +68,41 @@ def click_buttons(_, message):
     elif times < 1:
         app.send_message(chat_id, "дурачок? буде 1")
         times = 1
-    buy_heal(_, message)
-    for i in range(start_message_id - times, start_message_id + 1):
-        message_to_click = app.get_messages(chat_id, i)
-        try:
-            message_to_click.click(0, timeout=1)
-        except TimeoutError as e:   # skip timeout
-            pass
-        except ValueError as e:     # skip non-battle messages
-            pass
+    click(_, message, start_message_id, times, chat_id)
 
 
 @app.on_message(filters.command("info", "!"))
 def info(_, message):
     app.send_message(message.chat.id, message)
+
+
+@app.on_message(filters.command("ebash", "!"))
+def ebash(_, message):
+    chat_id = message.chat.id
+    splited = message.text.split(" ")
+    times = 30
+    target = splited[1]
+    if target != nickname:
+        return
+    fight(_, message, times, chat_id)
+    text = f"!cluck {message.from_user.username}"
+    sent = app.send_message(chat_id, "получаю ід повідомлення")
+    app.send_message(chat_id, text, reply_to_message_id=app.get_messages(chat_id, sent.message_id - 2).message_id)
+
+
+@app.on_message(filters.command("cluck", "!"))
+def force_click(_, message):
+    chat_id = message.chat.id
+    splited = message.text.split(" ")
+    times = 30
+    target = splited[1]
+    if target != nickname:
+        return
+    start_message_id = message.reply_to_message.message_id
+    click(_, message, start_message_id, times, chat_id)
+    text = f"!ebash {message.from_user.username}"
+    sleep(60)
+    app.send_message(chat_id, text)
 
 
 def fight(_, message, times, chat_id):
@@ -111,6 +116,18 @@ def fight(_, message, times, chat_id):
         except FloodWait as e:
             sleep(e.x)
     app.send_message(chat_id, "кінчив")
+
+
+def click(_, message, start_message_id, times, chat_id):
+    buy_heal(_, message)
+    for i in range(start_message_id - times, start_message_id + 1):
+        message_to_click = app.get_messages(chat_id, i)
+        try:
+            message_to_click.click(0, timeout=1)
+        except TimeoutError as e:   # skip timeout
+            pass
+        except ValueError as e:     # skip non-battle messages
+            pass
 
 
 app.run()
