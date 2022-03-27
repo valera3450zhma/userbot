@@ -150,7 +150,7 @@ def analyze(_, message):
 
     for i in range(times):
         app.forward_messages(chat_id, -786803186, messages_to_forward)
-        sleep(5)
+        sleep(10)
         sent = app.send_message(chat_id, "получаю ід повідомлення")
         click(_, message, sent.message_id - 1, commands, chat_id)
         for j in range(sent.message_id - commands, sent.message_id + 1):
