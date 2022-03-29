@@ -94,6 +94,7 @@ def ebash(_, message):
     target = splited[1]
     if target != nickname:
         return
+    buy_heal(_, message)
     fight(_, message, times, chat_id)
     text = f"!cluck {message.from_user.username}"
     sent = app.send_message(chat_id, "получаю ід повідомлення")
@@ -115,6 +116,7 @@ def force_click(_, message):
     click(_, message, start_message_id, times, chat_id)
     app.send_message(chat_id, "наклікався")
     sleep(5)
+    buy_heal(_, message)
     fight(_, message, times, chat_id)
     text = f"!cluck {message.from_user.username}"
     sent = app.send_message(chat_id, "получаю ід повідомлення")
