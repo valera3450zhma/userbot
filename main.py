@@ -50,7 +50,7 @@ def buy_heal(_, message):
     chat_id = message.chat.id
     app.send_message(chat_id, "чекаю хп в боті")
     sent = app.send_message("Random_UAbot", "/rusak")
-    sleep(2)
+    sleep(3)
     health = int(app.get_messages("Random_UAbot", sent.message_id + 1).caption.split()[18])
     if health < 30:
         app.send_message(chat_id, "треба аптечку")
@@ -87,6 +87,8 @@ def info(_, message):
 @app.on_message(filters.command("ebash", "!"))
 def ebash(_, message):
     chat_id = message.chat.id
+    if chat_id != -751052700:
+        return
     splited = message.text.split(" ")
     times = 30
     target = splited[1]
@@ -95,14 +97,14 @@ def ebash(_, message):
     fight(_, message, times, chat_id)
     text = f"!cluck {message.from_user.username}"
     sent = app.send_message(chat_id, "получаю ід повідомлення")
-    print(sent.message_id)
-    print(sent.message_id-2)
     app.send_message(chat_id, text, reply_to_message_id=app.get_messages(chat_id, sent.message_id - 2).message_id)
 
 
 @app.on_message(filters.command("cluck", "!"))
 def force_click(_, message):
     chat_id = message.chat.id
+    if chat_id != -751052700:
+        return
     splited = message.text.split(" ")
     times = 30
     target = splited[1]
@@ -111,9 +113,13 @@ def force_click(_, message):
     start_message_id = message.reply_to_message.message_id
     buy_heal(_, message)
     click(_, message, start_message_id, times, chat_id)
-    text = f"!ebash {message.from_user.username}"
-    sleep(60)
-    app.send_message(chat_id, text)
+    app.send_message(chat_id, "наклікався")
+    sleep(5)
+    fight(_, message, times, chat_id)
+    text = f"!cluck {message.from_user.username}"
+    sent = app.send_message(chat_id, "получаю ід повідомлення")
+    sleep(5)
+    app.send_message(chat_id, text, reply_to_message_id=app.get_messages(chat_id, sent.message_id-2).message_id)
 
 
 @app.on_message(filters.command("packs", "!"))
