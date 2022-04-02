@@ -174,6 +174,7 @@ def analyze(_, message):
 @app.on_message(filters.text)
 def war(_, message):
     if "Починається міжчатова битва" in message.text:
+        app.send_message(nickname, message.chat.title)
         app.forward_messages(nickname, message.chat.id, message.message_id)
 
 
