@@ -171,6 +171,12 @@ def analyze(_, message):
     app.send_message(chat_id, stats)
 
 
+@app.on_message(filters.text)
+def war(_, message):
+    if "Починається міжчатова битва" in message.text:
+        app.forward_messages(nickname, message.chat.id, message.message_id)
+
+
 def fight(_, message, times, chat_id):
     for i in range(times):
         try:
