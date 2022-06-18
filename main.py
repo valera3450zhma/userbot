@@ -1,3 +1,5 @@
+import re
+
 from pyrogram import Client, filters
 from pyrogram.errors import FloodWait
 
@@ -31,7 +33,7 @@ def mc_petya(_, message):
     app.forward_messages(forward_to, listen_to, message.id, disable_notification=True)
 
 
-@app.on_message(filters.user(na_kogo_rygaty))
+@app.on_message(filters.user(na_kogo_rygaty) | filters.regex(re.compile("рома", re.IGNORECASE)))
 def rygachka(_, message):
     app.send_reaction(message.chat.id, message.id, "🤮")
 
