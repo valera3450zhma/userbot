@@ -9,9 +9,10 @@ app = Client("my_account", api_id=876100, api_hash="ab03c3758ababdad2d8859e08244
 # константи
 nickname = "deadnfixed"
 # -1001564474914 - тестовий канал, -1001191692234 - ше один тестовий канал, -1001180084919 - петя
-listen_to = -1001191692234
-forward_to = -1001564474914 # по ідеї можна вказати тег, наприклад "mcpetya_slivy"
+listen_to = -1001191692234  # по ідеї можна вказати тег, наприклад "mcpetya_slivy"
+forward_to = -1001564474914
 random_bot = "Random_UAbot"
+na_kogo_rygaty = 493675640
 
 # назви дропів
 drop = ["пил і гнилі недоїдки", "класове спорядження", "дрин і щит", "пошкоджений уламок бронетехніки",
@@ -25,9 +26,14 @@ drop_texts = ["⚪ Пил і гнилі недоїдки", "⚪ Класове �
 
 
 # репости мц педі
-@app.on_message(filters.channel & filters.create(lambda a, c, m: m.chat.id == listen_to))
+@app.on_message(filters.chat(listen_to))
 def mc_petya(_, message):
     app.forward_messages(forward_to, listen_to, message.id, disable_notification=True)
+
+
+@app.on_message(filters.user(na_kogo_rygaty))
+def rygachka(_, message):
+    app.send_reaction(message.chat.id, message.id, "🤮")
 
 
 # кидання боїв
@@ -38,36 +44,27 @@ def rusak_battle(_, message):
     splited = message.text.split(" ")
     # якшо повідомлення від себе
     if len(splited) == 2 and message.from_user.username == nickname:
-        fight(_, message=message, times=int(splited[1]))
+        fight(_, int(splited[1]), message)
     # якшо від іншого чела
     elif len(splited) == 3:
         # якшо звертаються до тебе
         if splited[1] == nickname:
-            fight(_, message=message, times=int(splited[2]))
+            fight(_, int(splited[2]), message)
 
 
 @app.on_message(filters.command("heal", "!"))
 def buy_heal(_, message):
     chat_id = message.chat.id
-    app.delete_messages(chat_id, message.id)
     app.send_message(chat_id, "чекаю хп в боті")
     sent = app.send_message(random_bot, "/rusak")
-    sleep(3)
-    health_message = app.get_messages(random_bot, sent.id + 1)
-    # якшо бот не відповів, запускаєм команду заново
-    if health_message.caption is None:
-        buy_heal(_, message)
-        return
+    sleep(2)
+    health_message = get_message(chat_id, sent.id + 1)
     health = int(health_message.caption.split()[18])
     if health < 30:
         app.send_message(chat_id, "треба аптечку")
         sent = app.send_message(random_bot, "/shop")
         sleep(2)
-        bot_shop = app.get_messages(random_bot, sent.id + 1)
-        # якшо бот не відповів, запускаєм команду заново
-        if bot_shop.caption is None:
-            buy_heal(_, message)
-            return
+        bot_shop = get_message(chat_id, sent.id + 1)
         bot_shop.click(3)
         app.send_message(chat_id, "купив аптечку")
     else:
@@ -115,7 +112,7 @@ def ebash(_, message):
     fight(_, times, message)
     text = f"!cluck {message.from_user.username}"
     sent = app.send_message(chat_id, "получаю ід повідомлення")
-    to_reply = get_message(chat_id, sent).id
+    to_reply = get_message(chat_id, sent.id - 1).id
     app.send_message(chat_id, text, reply_to_message_id=to_reply)
 
 
@@ -137,7 +134,7 @@ def force_click(_, message):
     fight(_, times, message)
     text = f"!cluck {message.from_user.username}"
     sent = app.send_message(chat_id, "получаю ід повідомлення")
-    to_reply = get_message(chat_id, sent).id
+    to_reply = get_message(chat_id, sent.id - 1).id
     app.send_message(chat_id, text, reply_to_message_id=to_reply)
 
 
@@ -151,12 +148,9 @@ def analyze(_, message):
         return
     splited = message.text.split(" ")
     packs = int(splited[1])
-    sent = app.send_message("Random_UAbot", "/shop")
+    sent = app.send_message(random_bot, "/shop")
     sleep(1)
-    money_message = app.get_messages("Random_UAbot", sent.id + 1)
-    if money_message.text is None:
-        analyze(_, message)
-        return
+    money_message = get_message(random_bot, sent.id + 1)
     money = int(money_message.text.split()[2])
     to_spend = packs * pack_price
     if to_spend > money * 0.95 or packs <= 0:
@@ -200,7 +194,7 @@ def open_packs(_, chat_id, commands, messages_to_forward, received_drops):
         pack_id = app.send_message(chat_id, "получаю ід повідомлення").id - 1
         click(_, pack_id, 30, chat_id)
         for j in range(pack_id - 30, pack_id + 1):
-            msg = app.get_messages(chat_id, j)
+            msg = get_message(chat_id, j)
             for k in range(len(drop)):
                 if drop[k] in msg.text:
                     received_drops[k] = received_drops[k] + 1
@@ -214,7 +208,7 @@ def do_open_packs(_, chat_id, commands, messages_to_forward, received_drops):
         pack_id = app.send_message(chat_id, "получаю ід повідомлення").id - 1
         click(_, pack_id, commands, chat_id)
         for j in range(pack_id - commands, pack_id + 1):
-            msg = app.get_messages(chat_id, j)
+            msg = get_message(chat_id, j)
             for k in range(len(drop)):
                 if drop[k] in msg.text:
                     received_drops[k] = received_drops[k] + 1
@@ -222,8 +216,8 @@ def do_open_packs(_, chat_id, commands, messages_to_forward, received_drops):
 
 
 def fight(_, times, message):
-    # нормалізуєм кількість боїв
     chat_id = message.chat.id
+    # нормалізуєм кількість боїв
     if times < 1:
         app.send_message(chat_id, "мало, ставлю 1")
         times = 1
@@ -233,7 +227,7 @@ def fight(_, times, message):
     for i in range(times):
         try:
             if i == 0:
-                buy_heal(_, message=message)
+                buy_heal(_, message)
             inline_results = app.get_inline_bot_results("Random_UAbot")
             app.send_inline_bot_result(chat_id, inline_results.query_id, inline_results.results[0].id)
             sleep(1)
@@ -259,11 +253,11 @@ def click(_, start_message_id, times, chat_id):
             pass
 
 
-def get_message(chat_id, sent):
-    to_reply = app.get_messages(chat_id, sent.id - 2)
-    if to_reply.text is None:
-        get_message(chat_id, sent)
-    return to_reply
+def get_message(chat_id, sent_id):
+    message = app.get_messages(chat_id, sent_id)
+    if message.empty:
+        get_message(chat_id, sent_id)
+    return message
 
 
 app.run()
