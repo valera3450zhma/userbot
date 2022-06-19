@@ -1,3 +1,4 @@
+import random
 import re
 
 from pyrogram import Client, filters
@@ -14,7 +15,6 @@ nickname = "deadnfixed"
 listen_to = -1001191692234  # по ідеї можна вказати тег, наприклад "mcpetya_slivy"
 forward_to = -1001564474914
 random_bot = "Random_UAbot"
-na_kogo_rygaty = 493675640
 
 # назви дропів
 drop = ["пил і гнилі недоїдки", "класове спорядження", "дрин і щит", "пошкоджений уламок бронетехніки",
@@ -33,9 +33,14 @@ def mc_petya(_, message):
     app.forward_messages(forward_to, listen_to, message.id, disable_notification=True)
 
 
-@app.on_message(filters.user(na_kogo_rygaty) | filters.regex(re.compile("рома", re.IGNORECASE)))
-def rygachka(_, message):
-    app.send_reaction(message.chat.id, message.id, "🤮")
+@app.on_edited_message(filters.chat(listen_to))
+def mc_petya(_, message):
+    app.forward_messages(forward_to, listen_to, message.id, disable_notification=True)
+
+
+@app.on_message(filters.command("rusak", "!")&filters.me)
+def info(_, message):
+    app.send_message(message.chat.id, message.reply_to_message)
 
 
 # кидання боїв
