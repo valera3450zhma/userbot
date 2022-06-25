@@ -12,8 +12,8 @@ app = Client("my_account", api_id=876100, api_hash="ab03c3758ababdad2d8859e08244
 # константи
 nickname = "deadnfixed"
 # -1001564474914 - тестовий канал, -1001191692234 - ше один тестовий канал, -1001180084919 - петя
-listen_to = -1001191692234  # по ідеї можна вказати тег, наприклад "mcpetya_slivy"
-forward_to = -1001564474914
+listen_to = "mcpetyatelegram"  # по ідеї можна вказати тег, наприклад "mcpetya_slivy"
+forward_to = "mcpetya_slivy"
 random_bot = "Random_UAbot"
 
 # назви дропів
