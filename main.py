@@ -38,7 +38,7 @@ def mc_petya(_, message):
     app.forward_messages(forward_to, listen_to, message.id, disable_notification=True)
 
 
-@app.on_message(filters.command("rusak", "!")&filters.me)
+@app.on_message(filters.command("info", "!")&filters.me)
 def info(_, message):
     app.send_message(message.chat.id, message.reply_to_message)
 
