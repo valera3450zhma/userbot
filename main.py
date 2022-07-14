@@ -1,6 +1,3 @@
-import random
-import re
-
 from pyrogram import Client, filters
 from pyrogram.errors import FloodWait
 
@@ -57,6 +54,20 @@ def rusak_battle(_, message):
         # якшо звертаються до тебе
         if splited[1] == nickname:
             fight(_, int(splited[2]), message)
+
+
+# хавка
+@app.on_message(filters.command("feed", "!"))
+def rusak_battle(_, message):
+    chat_id = message.chat.id
+    # якшо повідомлення від себе
+    if message.from_user.username == nickname:
+        app.delete_messages(chat_id, message.id)
+        app.send_message(chat_id, "/feed")
+        app.send_message(chat_id, "/swap")
+        app.send_message(chat_id, "/feed")
+        app.send_message(chat_id, "/swap")
+        app.send_message(chat_id, "/woman")
 
 
 @app.on_message(filters.command("heal", "!"))
