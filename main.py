@@ -70,6 +70,28 @@ def rusak_feed(_, message):
         app.send_message(chat_id, "/woman")
 
 
+# БД
+@app.on_message(filters.command("bd", "!"))
+def rusak_feed(_, message):
+    chat_id = message.chat.id
+    # якшо повідомлення від себе
+    if message.from_user.username == nickname:
+        app.delete_messages(chat_id, message.id)
+        sent = app.send_message(random_bot, "/rusak")
+        sleep(1)
+        bd_message = get_message(chat_id, sent.id + 1)
+        remaining_bd = 10000 - int(bd_message.caption.split()[15])
+        times = int(remaining_bd / 400)
+        if times <= 0:
+            return
+        app.send_message(random_bot, f"Жди {times} сек")
+        sent = app.send_message(random_bot, "/shop")
+        shop_message = get_message(chat_id, sent.id + 1)
+        for i in range(times):
+            shop_message.click(0, timeout=1)
+        app.send_message(chat_id, "/rusak")
+
+
 @app.on_message(filters.command("heal", "!"))
 def buy_heal(_, message):
     chat_id = message.chat.id
