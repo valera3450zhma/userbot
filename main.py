@@ -81,7 +81,7 @@ def rusak_feed(_, message):
         sleep(1)
         bd_message = get_message(chat_id, sent.id + 1)
         remaining_bd = 10000 - int(bd_message.caption.split()[15])
-        times = int(remaining_bd / 400)
+        times = int(remaining_bd/400)
         if times <= 0:
             return
         app.send_message(random_bot, f"Жди {times} сек")
