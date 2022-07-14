@@ -58,7 +58,7 @@ def rusak_battle(_, message):
 
 # хавка
 @app.on_message(filters.command("feed", "!"))
-def rusak_battle(_, message):
+def rusak_feed(_, message):
     chat_id = message.chat.id
     # якшо повідомлення від себе
     if message.from_user.username == nickname:
