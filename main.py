@@ -40,7 +40,7 @@ def mc_petya(_, message):
     app.forward_messages(forward_to, listen_to, message.id, disable_notification=True)
 
 
-@app.on_message(filters.command("info", "!")&filters.me)
+@app.on_message(filters.command("info", "!") & filters.me)
 def info(_, message):
     app.send_message(message.chat.id, message.reply_to_message)
 
@@ -84,7 +84,7 @@ def rusak_bd(_, message):
     sleep(1)
     bd_message = get_message(random_bot, sent.id + 1)
     remaining_bd = 10000 - int(bd_message.caption.split()[15])
-    times = int(remaining_bd/400)
+    times = int(remaining_bd / 400)
     if times <= 0:
         return
     app.send_message(random_bot, f"Жди {times} сек")
@@ -113,7 +113,7 @@ def rusak_workers(_, message):
     lazy_users_ids = []
     for i in range(len(workers_split)):
         if workers_split[i] == "🟥":
-            lazy_users_ids.append(workers_split[i+2])
+            lazy_users_ids.append(workers_split[i + 2])
     if len(lazy_users_ids) == 0:
         app.send_message(chat_id, "Сьогодні всі відпрацювали зміну")
         return
@@ -172,7 +172,10 @@ def click_buttons(_, message):
 @app.on_message(filters.regex(re.compile(r'^.+?Починається битва.+?$')))
 def click_buttons(_, message):
     sleep(random.randint(5, 10))
-    message.click(0, timeout=3)
+    try:
+        message.click(0, timeout=3)
+    except TimeoutError:
+        pass
 
 
 @app.on_message(filters.command("info", "!"))
@@ -339,9 +342,9 @@ def click(_, start_message_id, times, chat_id):
         message_to_click = app.get_messages(chat_id, i)
         try:
             message_to_click.click(0, timeout=1)
-        except TimeoutError as e:   # skip timeout
+        except TimeoutError as e:  # skip timeout
             pass
-        except ValueError as e:     # skip non-battle messages
+        except ValueError as e:  # skip non-battle messages
             pass
 
 
