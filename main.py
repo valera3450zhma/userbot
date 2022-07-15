@@ -1,6 +1,9 @@
+import random
+
 from pyrogram import Client, filters
 from pyrogram.errors import FloodWait
 from contextlib import suppress
+import re
 
 from time import sleep
 
@@ -164,6 +167,12 @@ def click_buttons(_, message):
     start_message_id = message.reply_to_message.id
     buy_heal(_, message)
     click(_, start_message_id, times, chat_id)
+
+
+@app.on_edited_message(filters.regex(re.compile(r'^.+?Починається битва.+?$')))
+def click_buttons(_, message):
+    sleep(random.randint(5, 10))
+    message.click(0, timeout=3)
 
 
 @app.on_message(filters.command("info", "!"))
