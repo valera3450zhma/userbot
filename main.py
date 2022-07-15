@@ -13,16 +13,17 @@ nickname = "deadnfixed"
 listen_to = "000"  # по ідеї можна вказати тег, наприклад "mcpetya_slivy"
 forward_to = "111"
 random_bot = "Random_UAbot"
+soledar = "-1001211933154"
 
 # назви дропів
 drop = ["пил і гнилі недоїдки", "класове спорядження", "дрин і щит", "пошкоджений уламок бронетехніки",
-        "50 гривень", "ящиком горілки", "мертвий русак", "Мухомор королівський", "упаковок фольги",
+        "🛡 Уламок", "50 гривень", "ящиком горілки", "мертвий русак", "Мухомор королівський", "упаковок фольги",
         "Крім гаманця", "ручний протитанковий", "неушкоджений Бронежилет", "парадна форма"]
 
 # назви дропів для виведення стати
-drop_texts = ["⚪ Пил і гнилі недоїдки", "⚪ Класове спорядження", "⚪ Дрин і щит", "⚪ Уламок", "🔵 50 гривень",
-              "🔵 Ящик горілки", "🔵 Мертвий русак", "🟣 Мухомор королівський", "🟣 Шапочка", "🟣 Їжа", "🟡 РПГ-7",
-              "🟡 Бронік Вагнерівця", "🟡 Погон"]
+drop_texts = ["⚪ Пил і гнилі недоїдки", "⚪ Класове спорядження", "⚪ Дрин і щит", "⚪ Уламок", "⚪ Цілий уламок",
+              "🔵 50 гривень", "🔵 Ящик горілки", "🔵 Мертвий русак", "🟣 Мухомор королівський", "🟣 Шапочка",
+              "🟣 Їжа", "🟡 РПГ-7", "🟡 Бронік Вагнерівця", "🟡 Погон"]
 
 
 # репости мц педі
@@ -58,82 +59,78 @@ def rusak_battle(_, message):
 
 
 # хавка
-@app.on_message(filters.command("feed", "!"))
+@app.on_message(filters.command("feed", "!") & filters.me)
 def rusak_feed(_, message):
     chat_id = message.chat.id
-    # якшо повідомлення від себе
-    if message.from_user.username == nickname:
-        app.delete_messages(chat_id, message.id)
-        app.send_message(chat_id, "/feed")
-        app.send_message(chat_id, "/swap")
-        app.send_message(chat_id, "/feed")
-        app.send_message(chat_id, "/swap")
-        app.send_message(chat_id, "/woman")
+    app.delete_messages(chat_id, message.id)
+    app.send_message(chat_id, "/feed")
+    app.send_message(soledar, "/mine")
+    app.send_message(chat_id, "/swap")
+    app.send_message(chat_id, "/feed")
+    app.send_message(soledar, "/mine")
+    app.send_message(chat_id, "/swap")
+    app.send_message(chat_id, "/woman")
 
 
 # БД
-@app.on_message(filters.command("bd", "!"))
+@app.on_message(filters.command("bd", "!") & filters.me)
 def rusak_bd(_, message):
     chat_id = message.chat.id
-    # якшо повідомлення від себе
-    if message.from_user.username == nickname:
-        app.delete_messages(chat_id, message.id)
-        sent = app.send_message(random_bot, "/rusak")
-        sleep(1)
-        bd_message = get_message(random_bot, sent.id + 1)
-        remaining_bd = 10000 - int(bd_message.caption.split()[15])
-        times = int(remaining_bd/400)
-        if times <= 0:
-            return
-        app.send_message(random_bot, f"Жди {times} сек")
-        sent = app.send_message(random_bot, "/shop")
-        shop_message = get_message(random_bot, sent.id + 1)
-        for i in range(times):
-            shop_message.click(0, timeout=1)
-        app.send_message(chat_id, "/rusak")
+    app.delete_messages(chat_id, message.id)
+    sent = app.send_message(random_bot, "/rusak")
+    sleep(1)
+    bd_message = get_message(random_bot, sent.id + 1)
+    remaining_bd = 10000 - int(bd_message.caption.split()[15])
+    times = int(remaining_bd/400)
+    if times <= 0:
+        return
+    app.send_message(random_bot, f"Жди {times} сек")
+    sent = app.send_message(random_bot, "/shop")
+    shop_message = get_message(random_bot, sent.id + 1)
+    for i in range(times):
+        shop_message.click(0, timeout=1)
+    app.send_message(chat_id, "/rusak")
 
 
 # Нагадування про роботу
-@app.on_message(filters.command("workers", "!"))
+@app.on_message(filters.command("workers", "!") & filters.me)
 def rusak_workers(_, message):
     chat_id = message.chat.id
-    # якшо повідомлення від себе
-    if message.from_user.username == nickname:
-        app.delete_messages(chat_id, message.id)
-        sent = app.send_message(random_bot, "/clan_settings")
-        sleep(1)
-        settings_message = get_message(random_bot, sent.id + 1)
-        with suppress(TimeoutError):
-            settings_message.click(6, timeout=1)
-        sleep(1)
-        with suppress(TimeoutError):
-            get_message(random_bot, settings_message.id + 1).click(0, timeout=1)
-        workers_message = get_message(random_bot, settings_message.id + 1)
-        workers_split = workers_message.text.split()
-        lazy_users_ids = []
-        for i in range(len(workers_split)):
-            if workers_split[i] == "🟥":
-                lazy_users_ids.append(workers_split[i+2])
-        lazy_users = list(app.get_users(lazy_users_ids))
-        main_cycles = int(len(lazy_users) / 3)
-        adjust_cycle = int(len(lazy_users) % 3)
-        messages_texts = []
-        for i in range(main_cycles):
-            text = "Не працювали:\n\n"
-            for k in range(3):
-                text += "@" + lazy_users[0].username + "\n"
-                lazy_users.pop(0)
-            text += "\n/work"
-            messages_texts.append(text)
-
+    app.delete_messages(chat_id, message.id)
+    sent = app.send_message(random_bot, "/clan_settings")
+    sleep(1)
+    settings_message = get_message(random_bot, sent.id + 1)
+    with suppress(TimeoutError):
+        settings_message.click(6, timeout=1)
+    sleep(1)
+    with suppress(TimeoutError):
+        get_message(random_bot, settings_message.id + 1).click(0, timeout=1)
+    workers_message = get_message(random_bot, settings_message.id + 1)
+    workers_split = workers_message.text.split()
+    lazy_users_ids = []
+    for i in range(len(workers_split)):
+        if workers_split[i] == "🟥":
+            lazy_users_ids.append(workers_split[i+2])
+    lazy_users = list(app.get_users(lazy_users_ids))
+    main_cycles = int(len(lazy_users) / 3)
+    adjust_cycle = int(len(lazy_users) % 3)
+    messages_texts = []
+    for i in range(main_cycles):
         text = "Не працювали:\n\n"
-        for k in range(adjust_cycle):
+        for k in range(3):
             text += "@" + lazy_users[0].username + "\n"
             lazy_users.pop(0)
         text += "\n/work"
         messages_texts.append(text)
-        for message_text in messages_texts:
-            app.send_message(chat_id, message_text)
+
+    text = "Не працювали:\n\n"
+    for k in range(adjust_cycle):
+        text += "@" + lazy_users[0].username + "\n"
+        lazy_users.pop(0)
+    text += "\n/work"
+    messages_texts.append(text)
+    for message_text in messages_texts:
+        app.send_message(chat_id, message_text)
 
 
 @app.on_message(filters.command("heal", "!"))
