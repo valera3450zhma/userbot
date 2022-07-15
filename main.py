@@ -111,6 +111,9 @@ def rusak_workers(_, message):
     for i in range(len(workers_split)):
         if workers_split[i] == "🟥":
             lazy_users_ids.append(workers_split[i+2])
+    if len(lazy_users_ids) == 0:
+        app.send_message(chat_id, "Сьогодні всі відпрацювали зміну")
+        return
     lazy_users = list(app.get_users(lazy_users_ids))
     main_cycles = int(len(lazy_users) / 3)
     adjust_cycle = int(len(lazy_users) % 3)
