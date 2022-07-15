@@ -1,5 +1,6 @@
 from pyrogram import Client, filters
 from pyrogram.errors import FloodWait
+from contextlib import suppress
 
 from time import sleep
 
@@ -72,24 +73,67 @@ def rusak_feed(_, message):
 
 # БД
 @app.on_message(filters.command("bd", "!"))
-def rusak_feed(_, message):
+def rusak_bd(_, message):
     chat_id = message.chat.id
     # якшо повідомлення від себе
     if message.from_user.username == nickname:
         app.delete_messages(chat_id, message.id)
         sent = app.send_message(random_bot, "/rusak")
         sleep(1)
-        bd_message = get_message(chat_id, sent.id + 1)
+        bd_message = get_message(random_bot, sent.id + 1)
         remaining_bd = 10000 - int(bd_message.caption.split()[15])
         times = int(remaining_bd/400)
         if times <= 0:
             return
         app.send_message(random_bot, f"Жди {times} сек")
         sent = app.send_message(random_bot, "/shop")
-        shop_message = get_message(chat_id, sent.id + 1)
+        shop_message = get_message(random_bot, sent.id + 1)
         for i in range(times):
             shop_message.click(0, timeout=1)
         app.send_message(chat_id, "/rusak")
+
+
+# Нагадування про роботу
+@app.on_message(filters.command("workers", "!"))
+def rusak_workers(_, message):
+    chat_id = message.chat.id
+    # якшо повідомлення від себе
+    if message.from_user.username == nickname:
+        app.delete_messages(chat_id, message.id)
+        sent = app.send_message(random_bot, "/clan_settings")
+        sleep(1)
+        settings_message = get_message(random_bot, sent.id + 1)
+        with suppress(TimeoutError):
+            settings_message.click(6, timeout=1)
+        sleep(1)
+        with suppress(TimeoutError):
+            get_message(random_bot, settings_message.id + 1).click(0, timeout=1)
+        workers_message = get_message(random_bot, settings_message.id + 1)
+        workers_split = workers_message.text.split()
+        lazy_users_ids = []
+        for i in range(len(workers_split)):
+            if workers_split[i] == "🟥":
+                lazy_users_ids.append(workers_split[i+2])
+        lazy_users = list(app.get_users(lazy_users_ids))
+        main_cycles = int(len(lazy_users) / 3)
+        adjust_cycle = int(len(lazy_users) % 3)
+        messages_texts = []
+        for i in range(main_cycles):
+            text = "Не працювали:\n\n"
+            for k in range(3):
+                text += "@" + lazy_users[0].username + "\n"
+                lazy_users.pop(0)
+            text += "\n/work"
+            messages_texts.append(text)
+
+        text = "Не працювали:\n\n"
+        for k in range(adjust_cycle):
+            text += "@" + lazy_users[0].username + "\n"
+            lazy_users.pop(0)
+        text += "\n/work"
+        messages_texts.append(text)
+        for message_text in messages_texts:
+            app.send_message(chat_id, message_text)
 
 
 @app.on_message(filters.command("heal", "!"))
@@ -98,13 +142,13 @@ def buy_heal(_, message):
     app.send_message(chat_id, "чекаю хп в боті")
     sent = app.send_message(random_bot, "/rusak")
     sleep(2)
-    health_message = get_message(chat_id, sent.id + 1)
+    health_message = get_message(random_bot, sent.id + 1)
     health = int(health_message.caption.split()[18])
     if health < 30:
         app.send_message(chat_id, "треба аптечку")
         sent = app.send_message(random_bot, "/shop")
         sleep(2)
-        bot_shop = get_message(chat_id, sent.id + 1)
+        bot_shop = get_message(random_bot, sent.id + 1)
         bot_shop.click(3)
         app.send_message(chat_id, "купив аптечку")
     else:
@@ -270,7 +314,6 @@ def fight(_, times, message):
                 buy_heal(_, message)
             inline_results = app.get_inline_bot_results("Random_UAbot")
             app.send_inline_bot_result(chat_id, inline_results.query_id, inline_results.results[0].id)
-            sleep(1)
         except FloodWait as e:
             sleep(e.value)
     app.send_message(chat_id, "кінчив")
