@@ -17,6 +17,7 @@ listen_to = "000"  # по ідеї можна вказати тег, напри�
 forward_to = "111"
 random_bot = "Random_UAbot"
 soledar = "-1001211933154"
+clan = "-1001702852086"
 
 # назви дропів
 drop = ["пил і гнилі недоїдки", "класове спорядження", "дрин і щит", "пошкоджений уламок бронетехніки",
@@ -43,6 +44,16 @@ def mc_petya(_, message):
 @app.on_message(filters.command("info", "!") & filters.me)
 def info(_, message):
     app.send_message(message.chat.id, message.reply_to_message)
+
+
+@app.on_message(filters.command("get_user", "!") & filters.me)
+def get_user(_, message):
+    app.send_message(message.chat.id, app.get_users(message.reply_to_message.text))
+
+
+@app.on_message(filters.command("get_chat", "!") & filters.me)
+def get_user(_, message):
+    app.send_message(message.chat.id, app.get_chat(message.reply_to_message.text))
 
 
 # кидання боїв
@@ -89,6 +100,7 @@ def rusak_bd(_, message):
         return
     app.send_message(random_bot, f"Жди {times} сек")
     sent = app.send_message(random_bot, "/shop")
+    sleep(1)
     shop_message = get_message(random_bot, sent.id + 1)
     for i in range(times):
         shop_message.click(0, timeout=1)
@@ -169,9 +181,19 @@ def click_buttons(_, message):
     click(_, start_message_id, times, chat_id)
 
 
+# auto-battle
 @app.on_message(filters.regex(re.compile(r'^.+?Починається битва.+?$')))
 def click_buttons(_, message):
-    sleep(random.randint(5, 10))
+    sleep(random.randint(10, 50))
+    try:
+        message.click(0, timeout=3)
+    except TimeoutError:
+        pass
+
+
+# auto-clan-battle
+@app.on_message(filters.regex(re.compile(r'^.+?Починається міжчатова битва.+?$')) & filters.chat(clan))
+def click_buttons(_, message):
     try:
         message.click(0, timeout=3)
     except TimeoutError:
