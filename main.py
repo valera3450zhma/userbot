@@ -121,11 +121,12 @@ def rusak_workers(_, message):
     with suppress(TimeoutError):
         get_message(random_bot, settings_message.id + 1).click(0, timeout=1)
     workers_message = get_message(random_bot, settings_message.id + 1)
-    workers_split = workers_message.text.split()
+    workers_split = workers_message.text.split("\n")
     lazy_users_ids = []
     for i in range(len(workers_split)):
-        if workers_split[i] == "🟥":
-            lazy_users_ids.append(workers_split[i + 2])
+        if "🟥" in workers_split[i]:
+            user_id = int(re.findall("\\b\\d+", workers_split[i])[0])
+            lazy_users_ids.append(user_id)
     if len(lazy_users_ids) == 0:
         app.send_message(chat_id, "Сьогодні всі відпрацювали зміну")
         return
