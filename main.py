@@ -189,10 +189,10 @@ def click_buttons(_, message):
 
 # auto-battle
 @app.on_message(filters.regex(re.compile(r'^.+?Починається.+?битва.+?$')))
-def click_buttons(_, message):
+def auto_battle(_, message):
     if "міжчатова" not in message.text:
         sleep(random.randint(10, 50))
-    elif "міжчатова" in message.text and message.chat.id != clan:
+    elif "міжчатова" in message.text and message.chat.id != int(clan):
         return
     try:
         message.click(0, timeout=3)
