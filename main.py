@@ -130,7 +130,12 @@ def rusak_workers(_, message):
     if len(lazy_users_ids) == 0:
         app.send_message(chat_id, "Сьогодні всі відпрацювали зміну")
         return
-    lazy_users = list(app.get_users(lazy_users_ids))
+    lazy_users = []
+    for id in lazy_users_ids:
+        try:
+            lazy_users.append(app.get_users(id))
+        except:
+            pass
     main_cycles = int(len(lazy_users) / 3)
     adjust_cycle = int(len(lazy_users) % 3)
     messages_texts = []
@@ -141,13 +146,13 @@ def rusak_workers(_, message):
             lazy_users.pop(0)
         text += "\n/work"
         messages_texts.append(text)
-
-    text = "Не працювали:\n\n"
-    for k in range(adjust_cycle):
-        text += "@" + lazy_users[0].username + "\n"
-        lazy_users.pop(0)
-    text += "\n/work"
-    messages_texts.append(text)
+    if adjust_cycle > 0:
+        text = "Не працювали:\n\n"
+        for k in range(adjust_cycle):
+            text += "@" + lazy_users[0].username + "\n"
+            lazy_users.pop(0)
+        text += "\n/work"
+        messages_texts.append(text)
     for message_text in messages_texts:
         app.send_message(chat_id, message_text)
 
@@ -183,18 +188,12 @@ def click_buttons(_, message):
 
 
 # auto-battle
-@app.on_message(filters.regex(re.compile(r'^.+?Починається битва.+?$')))
+@app.on_message(filters.regex(re.compile(r'^.+?Починається.+?битва.+?$')))
 def click_buttons(_, message):
-    sleep(random.randint(10, 50))
-    try:
-        message.click(0, timeout=3)
-    except TimeoutError:
-        pass
-
-
-# auto-clan-battle
-@app.on_message(filters.regex(re.compile(r'^.+?Починається міжчатова битва.+?$')) & filters.chat(clan))
-def click_buttons(_, message):
+    if "міжчатова" not in message.text:
+        sleep(random.randint(10, 50))
+    elif "міжчатова" in message.text and message.chat.id != clan:
+        return
     try:
         message.click(0, timeout=3)
     except TimeoutError:
