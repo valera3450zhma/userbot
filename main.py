@@ -348,6 +348,7 @@ def fight(_, times, message):
                 buy_heal(_, message)
             inline_results = app.get_inline_bot_results("Random_UAbot")
             app.send_inline_bot_result(chat_id, inline_results.query_id, inline_results.results[0].id)
+            sleep(0.5)
         except FloodWait as e:
             sleep(e.value)
     app.send_message(chat_id, "кінчив")
