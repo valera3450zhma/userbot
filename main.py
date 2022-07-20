@@ -18,8 +18,8 @@ forward_to = "111"
 random_bot = "Random_UAbot"
 soledar = "-1001211933154"
 clan = "-1001702852086"
-mc_petya_chat = "-1001614189896"
-mc_petya_channel = "mcpetyatelegram"
+mc_petya_chat = "-1001574001208"
+mc_petya_channel = "-1001564474914"
 
 # назви дропів
 drop = ["пил і гнилі недоїдки", "класове спорядження", "дрин і щит", "пошкоджений уламок бронетехніки",
@@ -42,10 +42,10 @@ petya_texts = ["повне уністоження наркодиллерів", "
 
 
 # репости мц педі
-@app.on_message(filters.chat(mc_petya_chat))
+@app.on_message(filters.chat(int(mc_petya_chat)))
 def mc_petya(_, message):
     chat_id = message.chat.id
-    if message.sender_chat.id == int(mc_petya_channel):
+    if message.sender_chat is not None and message.sender_chat.id == int(mc_petya_channel):
         app.send_message(chat_id, random.choice(petya_texts), reply_to_message_id=message.id)
 
 
