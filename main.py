@@ -213,6 +213,15 @@ def auto_battle(_, message):
         pass
 
 
+# auto-send-battle
+@app.on_message(filters.regex(re.compile(r'^Міжчатова.+?завершена!.+?$')))
+def auto_battle(_, message):
+    chat_id = message.chat.id
+    if chat_id == int(clan):
+        app.send_message(chat_id, "/war")
+
+
+
 @app.on_message(filters.command("info", "!"))
 def info(_, message):
     app.send_message(message.chat.id, message.reply_to_message)
