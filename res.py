@@ -4,7 +4,7 @@ listen_to = "000"  # по ідеї можна вказати тег, напри�
 forward_to = "111"
 random_bot = "Random_UAbot"
 soledar = "-1001211933154"
-clan = "-1001702852086"
+clan = -1001702852086
 mc_petya_chat = "-1001614189896"
 mc_petya_channel = "-1001180084919"
 
