@@ -15,8 +15,8 @@ app = Client("my_account", api_id=876100, api_hash="ab03c3758ababdad2d8859e08244
 # константи
 nickname = res.nickname
 # -1001564474914 - тестовий канал, -1001191692234 - ше один тестовий канал, -1001180084919 - петя
-listen_to = res.listen_to  # по ідеї можна вказати тег, наприклад "mcpetya_slivy"
-forward_to = res.forward_to
+listen_to = res.mc_petya_channel  # по ідеї можна вказати тег, наприклад "mcpetya_slivy"
+forward_to = "mcpetya_slivy"
 random_bot = res.random_bot
 soledar = res.soledar
 clan = res.clan
