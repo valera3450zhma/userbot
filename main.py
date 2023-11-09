@@ -61,12 +61,12 @@ def info(_, message):
 
 @app.on_message(filters.command("get_user", "!") & filters.me)
 def get_user(_, message):
-    app.send_message(message.chat.id, app.get_users(message.reply_to_message.text))
+    app.send_message(message.chat.id, message.reply_to_message.from_user)
 
 
 @app.on_message(filters.command("get_chat", "!") & filters.me)
 def get_user(_, message):
-    app.send_message(message.chat.id, app.get_chat(message.reply_to_message.text))
+    app.send_message(message.chat.id, message.reply_to_message.sender_chat)
 
 
 # кидання боїв
@@ -283,7 +283,7 @@ def analyze(_, message):
     pack_price = 20
     chat_id = message.chat.id
     # якшо запущено в чаті, відмінному від чату з ботом
-    if chat_id != 1466731329:
+    if chat_id != 6277866886:
         app.send_message(chat_id, "всі дивіться, я дебіл")
         return
     splited = message.text.split(" ")
@@ -338,7 +338,7 @@ def open_packs(_, chat_id, commands, messages_to_forward, received_drops):
             for k in range(len(drop)):
                 if drop[k] in msg.text:
                     received_drops[k] = received_drops[k] + 1
-        app.send_message("Random_UAbot", "/feed")
+        app.send_message(random_bot, "/feed")
 
 
 def do_open_packs(_, chat_id, commands, messages_to_forward, received_drops):
@@ -352,7 +352,7 @@ def do_open_packs(_, chat_id, commands, messages_to_forward, received_drops):
             for k in range(len(drop)):
                 if drop[k] in msg.text:
                     received_drops[k] = received_drops[k] + 1
-        app.send_message("Random_UAbot", "/feed")
+        app.send_message(random, "/feed")
 
 
 def fight(_, times, message):
@@ -368,7 +368,7 @@ def fight(_, times, message):
         try:
             if i == 0:
                 buy_heal(_, message)
-            inline_results = app.get_inline_bot_results("Random_UAbot")
+            inline_results = app.get_inline_bot_results(random_bot)
             app.send_inline_bot_result(chat_id, inline_results.query_id, inline_results.results[0].id)
             sleep(0.5)
         except FloodWait as e:
