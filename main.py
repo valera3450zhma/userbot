@@ -66,12 +66,16 @@ def info(_, message):
 
 @app.on_message(filters.command("get_user", "!") & filters.me)
 def get_user(_, message):
-    app.send_message(message.chat.id, message.reply_to_message.from_user)
+    user_id = message.reply_to_message.text
+    user = app.get_users([user_id])
+    app.send_message(message.chat.id, str(user))
 
 
 @app.on_message(filters.command("get_chat", "!") & filters.me)
 def get_user(_, message):
-    app.send_message(message.chat.id, message.reply_to_message.sender_chat)
+    chat_id = message.reply_to_message.text
+    chat = app.get_chat(chat_id)
+    app.send_message(message.chat.id, str(chat))
 
 
 # кидання боїв
