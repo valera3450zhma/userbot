@@ -37,6 +37,11 @@ petya_texts = res.petya_texts
 
 
 # репости мц педі
+@app.on_message(filters.chat(listen_to))
+def mc_petya(_, message):
+    app.forward_messages(forward_to, listen_to, message.id, disable_notification=True)
+
+
 @app.on_message(filters.chat(int(mc_petya_chat)))
 def mc_petya(_, message):
     chat_id = message.chat.id

@@ -5,7 +5,7 @@ forward_to = "111"
 random_bot = "@RandomUA3bot"
 soledar = "-1001211933154"
 clan = -1001702852086
-mc_petya_chat = "-1001614189896"
+mc_petya_chat = "-1002052665289"
 mc_petya_channel = "-1001180084919"
 
 z_holodnogo_yaru = r"""У всякого своє лихо,
