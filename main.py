@@ -15,8 +15,8 @@ app = Client("my_account", api_id=876100, api_hash="ab03c3758ababdad2d8859e08244
 # константи
 nickname = res.nickname
 # -1001564474914 - тестовий канал, -1001191692234 - ше один тестовий канал, -1001180084919 - петя
-listen_to = "-1001564474914"  # по ідеї можна вказати тег, наприклад "mcpetya_slivy"
-forward_to = "-1001564474914"
+listen_to = res.mc_petya_channel  # по ідеї можна вказати тег, наприклад "mcpetya_slivy"
+forward_to = "mcpetya_slivy"
 random_bot = res.random_bot
 soledar = res.soledar
 clan = res.clan
@@ -37,8 +37,9 @@ petya_texts = res.petya_texts
 
 
 # репости мц педі
-@app.on_message(filters.chat(listen_to))
-def mc_petya(_, message):
+@app.on_message(filters.chat(int(listen_to)))
+def mc_petya_repost(_, message):
+    print("received an update")
     app.forward_messages(forward_to, listen_to, message.id, disable_notification=True)
 
 
@@ -49,8 +50,8 @@ def mc_petya(_, message):
         app.send_message(chat_id, random.choice(petya_texts), reply_to_message_id=message.id)
 
 
-@app.on_edited_message(filters.chat(listen_to))
-def mc_petya(_, message):
+@app.on_edited_message(filters.chat(int(listen_to)))
+def mc_petya_repost_edited(_, message):
     app.forward_messages(forward_to, listen_to, message.id, disable_notification=True)
 
 
